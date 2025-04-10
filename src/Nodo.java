@@ -8,6 +8,7 @@
  * @author notnilo
  */
 public class Nodo {
+
     private Nodo izq;
     private Nodo der;
     private Nodo padre;
@@ -16,6 +17,8 @@ public class Nodo {
     private String[] trivia;
     private boolean visitado;
     private String nombre;
+    
+    
 
     public Nodo(int valor, String nombre, String contexto, String[] trivia, Nodo padre) {
         this.nombre = nombre;
@@ -67,6 +70,18 @@ public class Nodo {
 
     public void setVisitadoTrue() {
         this.visitado = true;
+    }
+
+    public void setNombre(String nombre){
+    	this.nombre = nombre;
+    }
+
+    public void setContexto(String contexto){
+    	this.contexto = contexto;
+    }
+
+    public void setTrivia(String[] trivia){
+    	this.trivia = trivia;
     }
     
 }

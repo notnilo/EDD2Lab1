@@ -7,8 +7,10 @@
  *
  * @author notnilo
  */
+
+
 public class Arbol {
-    
+
     private Nodo raiz;
     public void insertar(Nodo nodo) {
         if (this.raiz == null) {
