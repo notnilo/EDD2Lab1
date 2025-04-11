@@ -47,7 +47,11 @@ public class Arbol {
             for (int i = 0; i < nivel; i++) {
                 System.out.print("            ");
             }
-            System.out.println(n1.getNombre());
+            if (n1.isVisitado()){
+                System.out.println(n1.getNombre());
+            }else{
+                System.out.println("X");
+            }
             imprimir(n1.getIzq(), nivel + 1);
 
         }

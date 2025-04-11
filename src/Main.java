@@ -99,7 +99,7 @@ public class Main {
 									
 									//Si se acerto y es el nodo sostenibilidad entonces se gana y sale del juego.
 									if(actual.getNombre().equalsIgnoreCase("Sostenibilidad")){
-										System.out.println("FELICIDADES! GANASTES EL JUEGO!!!");
+										System.out.println("FELICIDADES! GANASTE EL JUEGO!!!");
 										System.exit(0);
 									}
 									//Se escoge la direccion.
