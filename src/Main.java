@@ -12,6 +12,8 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) {
+
+    	//Objeto texto para comunicarse entre el programa y el texto del archivo gamedata.json
     	Texto t = new Texto();
         Scanner leer = new Scanner(System.in);
         Arbol arbol = generarArbol(t);
@@ -19,14 +21,15 @@ public class Main {
         // Asignacion hoja de sostenibilidad
         ArbolTools.assignSustainabilityLeaf(arbol.getRaiz(),t);
 
-        // Hilo del CLI
+        // Runnable corresponde a una tarea que se le asignara al hilo.
         Runnable tareaTexto = new Runnable() {
             @Override
             public void run() {
                 jugar(arbol, leer);
             }
         };
-
+        
+		//Uso del hilo para mantener separado la logica del programa en texto
         Thread hiloTexto = new Thread(tareaTexto);
         hiloTexto.start();
     }
@@ -34,16 +37,20 @@ public class Main {
     	public static void jugar(Arbol arbol, Scanner leer) {
     	        String entrada = "";
     	        Nodo actual = arbol.getRaiz();
-    	
+    			//Se repite mientras que la entrada no sea salir
     	        while (!entrada.equalsIgnoreCase("salir")) {
+
+    	        	//Print al nombre del nodo que en este caso seria el nombre del bioma
     	            if (!(actual == arbol.getRaiz())) {
     	                System.out.println("Bienvenido al Ecosistema " + actual.getNombre());
-
-    	                
     	            }
+
+					//El contexto es un resumen o descripcion del bioma y/o sus problematicas
     	            System.out.println(actual.getContexto());
     	
     	            if (!(actual == arbol.getRaiz())) {
+    	            	/*Si ya se visito el nodo, entonces no se hace pregunta, por el contrario nada mas se escoge la direccion
+    	            	del jugador.*/
     	                if (actual.isVisitado()) {
     	                    System.out.print("Ingrese 'izquierda', 'derecha', 'regresar' o 'salir': ");
     	                    entrada = leer.nextLine();
@@ -65,27 +72,37 @@ public class Main {
     	                        } else {
     	                            System.out.println("Est├ís en la ra├¡z, no puedes regresar.");
     	                        }
-    	                    }
+    	                    }   
     	                } else {
+							//En el caso contrario se le hacen preguntas al jugador.
     	                    boolean correcto = false;
     	                    int pregunta = 0;
     	                    while (!correcto) {
+    	                    	//En el nodo esta guardado la pregunta
     	                        System.out.println(actual.getTrivia()[pregunta]);
     	                        String respuesta = leer.nextLine();
+    	                        //Cada pregunta tiene su respuesta en el indice que le sigue
+    	                        //[Pregunta 1, Respuesta 1, Pregunta 2, Respuesta 2, Pregunta 3, Respuesta 3]
     	                        if (respuesta.equalsIgnoreCase(actual.getTrivia()[pregunta + 1])) {
     	                            System.out.println("┬íAcertaste!");
     	                            correcto = true;
+    	                            //Consideramos el nodo como visitado.
     	                            actual.setVisitadoTrue();
 
+									/*Para dar pista al jugador se muestra el mapa si se llega y acierta una respuesta en
+								      un nodo hoja (ArbolTools.isLeaf())
+									*/
 									if(ArbolTools.isLeaf(actual) && !(actual.getNombre().equalsIgnoreCase("Sostenibilidad")) ){
 										mostrarMapa(arbol);
 									}
 
+									
+									//Si se acerto y es el nodo sostenibilidad entonces se gana y sale del juego.
 									if(actual.getNombre().equalsIgnoreCase("Sostenibilidad")){
 										System.out.println("FELICIDADES! GANASTES EL JUEGO!!!");
 										System.exit(0);
 									}
-    	                            
+									//Se escoge la direccion.
     	                            System.out.print("Ingrese 'izquierda', 'derecha', 'regresar' o 'salir': ");
     	                            entrada = leer.nextLine();
     	                            if (entrada.equalsIgnoreCase("izquierda")) {
@@ -109,7 +126,9 @@ public class Main {
     	                            }
     	                        } else {
     	                            System.out.println("Incorrecto... Aqu├¡ est├í otra pregunta:");
+    	                            //Se pasa a la siguiente pregunta en caso de no acertar la primera.
     	                            pregunta += 2;
+    	                            //Si se llega a la ultima pregunta y el jugador falla entonces se devuelve a la primera pregunta.
     	                            if (pregunta > 5) {
     	                                pregunta = 0;
     	                            }
@@ -117,6 +136,8 @@ public class Main {
     	                    }
     	                }
     	            } else {
+
+    	            	//Se es coge la direccion.
     	                System.out.print("Ingrese 'izquierda', 'derecha', 'regresar' o 'salir': ");
     	                entrada = leer.nextLine();
     	                if (entrada.equalsIgnoreCase("izquierda")) {
@@ -143,8 +164,9 @@ public class Main {
     	    }
     	
     	    private static Arbol generarArbol(Texto t) {
+
     	            Arbol arbol = new Arbol();
-    	        
+    	        	//Añadimos los contextos de los biomas a los nodos. Añadimos las preguntas a los nodos. Añadimos padres a los nodos.
     	            Nodo nodo0 = new Nodo(0, "Bienvenido", t.getContext("instrucciones"), null, null);
     	            Nodo nodo1 = new Nodo(-4, "Terrestre", t.getContext("contextoTerrestre"), t.getQuestions("triviaTerrestre"), nodo0);
     	            Nodo nodo2 = new Nodo(4, "Acuatico", t.getContext("contextoAcuatico"), t.getQuestions("triviaAcuatico"), nodo0);
@@ -180,36 +202,11 @@ public class Main {
     	            return arbol;
     	        }
     	    
-
-    	    private static void toJSON(){
-    	    	try{
-
-					ObjectMapper mapper = new ObjectMapper();
-					Texto t = new Texto();
-					mapper.writeValue(new File("gamedata.json"),t);
-    	    	
-    	    		
-    	    	}catch(StreamWriteException e){
-    	    		
-    	    		System.out.println("Ha ocurrido un error al crear y escribir el JSON");
-
-    	    		e.printStackTrace();
-    	    		
-    	    	}catch(DatabindException e){
-    	   
-    	    		System.out.println("Ha ocurrido un error al mapear el objeto");
-
-    	    		e.printStackTrace();
-    	    		
-    	    	}catch(IOException e){
-    	    		System.out.println("Ha ocurrido un error de archivos... :(");
-    	    		e.printStackTrace();
-    	    	}
-    	    }
-
+			//SwingUtilites.invokeLater() es una forma de invocar un hilo que tiene como proposito renderizar graficos.
 			private static void mostrarMapa(Arbol arbol){
 
 					SwingUtilities.invokeLater(() -> {
+						 //Le pasamos el arbol a Interfaz para que lo dibuje
  		   				 Interfaz gui = new Interfaz(arbol);
  		   				 gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
  		   				 gui.setVisible(true);

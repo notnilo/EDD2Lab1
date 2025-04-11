@@ -12,6 +12,7 @@
 public class Arbol {
 
     private Nodo raiz;
+    //Este insertar es para no pasar la raiz directamente en los argumentos del metodo.
     public void insertar(Nodo nodo) {
         if (this.raiz == null) {
             this.raiz = nodo;
@@ -19,7 +20,7 @@ public class Arbol {
             insertarRecursivo(this.raiz, nodo);
         }
     }
-
+	//Insertar de verdad. El que verdaderamente inserta.
     void insertarRecursivo(Nodo nodo, Nodo nuevoNodo) {
         if (nuevoNodo.getValor() < nodo.getValor()) {
             if (nodo.getIzq() == null) {
@@ -37,7 +38,7 @@ public class Arbol {
     }
 
     public Nodo getRaiz() {
-        return raiz;
+        return this.raiz;
     }
     
     public void imprimir(Nodo n1, int nivel) {

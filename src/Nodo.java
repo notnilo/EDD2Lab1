@@ -11,10 +11,12 @@ public class Nodo {
 
     private Nodo izq;
     private Nodo der;
+    //El padre es un atributo necesario para poder escoger direccion 'regresar'.
     private Nodo padre;
     private int valor;
     private String contexto;
     private String[] trivia;
+    //Visitado es un atributo necesario para saber si se le pone preguntas o no al jugador.
     private boolean visitado;
     private String nombre;
     
