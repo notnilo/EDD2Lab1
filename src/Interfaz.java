@@ -41,7 +41,7 @@ public class Interfaz extends JFrame {
         c.setBackground(Color.white);
         add(c);
         setSize(1920,1080);
-        setVisible(true);
+        show();
         
     }
     
